@@ -1,0 +1,15 @@
+_Usage_
+__Rebuilding__
+Edit compile.sh as necessary for the specific architecture desired, current python versions, and desired software. Then run compile.sh to generate a ChRoot-based Funtoo (enhanced Gentoo) installation, with desktop environment software.
+
+__Persistent Files__
+The "packages" and "distfiles" directories should also be copied to the Config directory, for rebuilds of the ChRoot environment.
+
+__Binary Packages__
+Live "packages" directory should be made available by unprivileged SSH account for PORTAGE_BINHOST. See http://wiki.gentoo.org/wiki/Binary_package_guide#PORTAGE_BINHOST for syntax and instructions.
+
+__Images__
+Tarball images should be moved from the ChRoot folder to a separate Images directory. Images should be rebuilt upon major updates to the ChRoot environment, and unpacked to create filesystems for new Funtoo/Gentoo machines.
+
+__Maintenance__
+Ideally, a binary package server should be kept up-to-date. Otherwise, new images, and binary packages for the latest software, may be simply rebuilt with compile.sh.
