@@ -152,7 +152,7 @@ executeChRoot "rc-update add metalog default"
 
 executeChRoot "tar -cpf mirage335OS-buildAssets.tar -C / ./usr/portage/distfiles ./usr/portage/packages"
 
-executeChRoot "tar --exclude usr/portage/packages --exclude usr/portage/distfiles -cpf mirage335OS-lite.tar -C / ."
+executeChRoot "tar --exclude usr/portage/packages --exclude usr/portage/distfiles --exclude mirage335OS-buildAssets.tar -cpf mirage335OS-lite.tar -C / ."
 
 exit
 
