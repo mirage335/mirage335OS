@@ -24,7 +24,7 @@ tar -xpf stage3-latest.tar.xz
 rm -f stage3-latest.tar.xz
 
 cd usr
-sudo wget http://ftp.osuosl.org/pub/funtoo/funtoo-current/snapshots/portage-latest.tar.xz
+wget http://ftp.osuosl.org/pub/funtoo/funtoo-current/snapshots/portage-latest.tar.xz
 
 tar xf ./portage-latest.tar.xz
 rm -f ./portage-latest.tar.xz
