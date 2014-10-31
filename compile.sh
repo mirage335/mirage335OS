@@ -1,8 +1,12 @@
 #!/bin/bash
 
+#Assuming major version changes have not broken the script, some editing will still be required. Look for x32 and x64 comments.
+
 . ubiquitous_bash.sh
 
 mustBeRoot
+
+linux32 #x32
 
 #Execute instructions in ChRoot environment.
 executeChRoot() {
@@ -19,7 +23,8 @@ autoEtcUpdate() {
 mkdir -p ChRoot
 
 cd ChRoot
-wget http://ftp.osuosl.org/pub/funtoo/funtoo-stable/x86-64bit/generic_64/stage3-latest.tar.xz ##### MUST BE CORRECT ARCHITECTURE.
+wget http://ftp.osuosl.org/pub/funtoo/funtoo-stable/x86-32bit/i686/stage3-latest.tar.xz #x32
+#wget http://ftp.osuosl.org/pub/funtoo/funtoo-stable/x86-64bit/generic_64/stage3-latest.tar.xz #x64
 tar -xpf stage3-latest.tar.xz
 rm -f stage3-latest.tar.xz
 
@@ -116,7 +121,8 @@ executeChRoot "emerge --depclean"
 #####-Kernel-#####
 executeChRoot "emerge lzop gentoo-sources"
 
-executeChRoot "cd /usr/src/linux ; wget wget http://kernel.ubuntu.com/~kernel-ppa/configs/quantal/amd64-config.flavour.generic -O .config"
+#executeChRoot "cd /usr/src/linux ; wget http://kernel.ubuntu.com/~kernel-ppa/configs/quantal/amd64-config.flavour.generic -O .config" #x64
+executeChRoot "cd /usr/src/linux ; wget http://kernel.ubuntu.com/~kernel-ppa/configs/quantal/i386-config.flavour.generic -O .config" #x32
 
 executeChRoot "cd /usr/src/linux ; make clean ; make olddefconfig ; make -j 6 ; make modules_install ; cp ./arch/x86_64/boot/bzImage /boot/ProductionKernel"
 
