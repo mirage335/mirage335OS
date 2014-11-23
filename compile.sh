@@ -1,12 +1,12 @@
-#!/bin/bash
-
+#!/usr/bin/linux32 bash
+#x32
 #Assuming major version changes have not broken the script, some editing will still be required. Look for x32 and x64 comments.
+
+echo $$
 
 . ubiquitous_bash.sh
 
 mustBeRoot
-
-linux32 #x32
 
 #Execute instructions in ChRoot environment.
 executeChRoot() {
@@ -102,17 +102,24 @@ while ! executeChRoot "emerge --quiet-build y --backtrack 500 -uDN world xorg-x1
 do
 	autoEtcUpdate
 	
-	executeChRoot "perl-cleaner --reallyall"
+	executeChRoot "perl-cleaner --reallyall --usepkg=n"
 	
 	executeChRoot "emerge --sync"
 	
-	sleep 1
+	sleep 90
 done
 
 executeChRoot "emerge python:2.7 python:3.3"
 
+executeChRoot "mv /usr/portage/packages /usr/portage/packages.bak"
+
 executeChRoot "emerge @preserved-rebuild"
 executeChRoot "revdep-rebuild"
+
+
+executeChRoot "mv /usr/portage/packages /usr/portage/packages.rebuilt"
+executeChRoot "mv /usr/portage/packages.bak /usr/portage/packages"
+
 
 executeChRoot "emerge -uDN world"
 
@@ -124,7 +131,8 @@ executeChRoot "emerge lzop gentoo-sources"
 #executeChRoot "cd /usr/src/linux ; wget http://kernel.ubuntu.com/~kernel-ppa/configs/quantal/amd64-config.flavour.generic -O .config" #x64
 executeChRoot "cd /usr/src/linux ; wget http://kernel.ubuntu.com/~kernel-ppa/configs/quantal/i386-config.flavour.generic -O .config" #x32
 
-executeChRoot "cd /usr/src/linux ; make clean ; make olddefconfig ; make -j 6 ; make modules_install ; cp ./arch/x86_64/boot/bzImage /boot/ProductionKernel"
+#executeChRoot "cd /usr/src/linux ; make clean ; make olddefconfig ; make -j 6 ; make modules_install ; cp ./arch/x86_64/boot/bzImage /boot/ProductionKernel" #x64
+executeChRoot "cd /usr/src/linux ; make clean ; make olddefconfig ; make -j 6 ; make modules_install ; cp ./arch/x86/boot/bzImage /boot/ProductionKernel" #x86
 
 #####-Exceptional Softload INstallation-#####
 while ! executeChRoot "emerge chromium app-emulation/virtualbox[additions,alsa,pulseaudio,sdk] \>=app-emulation/IQEmu-9999"
