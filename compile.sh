@@ -63,7 +63,7 @@ executeChRoot "emerge --sync"
 #executeChRoot "/usr/bin/distcc-config --set-hosts 192.168.50.195/48"
 
 #####-Layman-#####
-executeChRoot "emerge layman"
+executeChRoot "emerge --usepkg layman"
 executeChRoot "echo 'source /var/lib/layman/make.conf' | tee -a /etc/portage/make.conf"
 
 #####-PROFILES-#####
@@ -98,11 +98,11 @@ executeChRoot "cd ~/mirage335-sets ; ./install.sh"
 #####-Custom Softload Installation-#####
 
 #WARNING. This could become an infinite loop.
-while ! executeChRoot "emerge --quiet-build y --backtrack 500 -uDN world xorg-x11 kdebase-meta kdm lxde-meta xdm metalog vixie-cron dhcpcd prelink boot-update @m335-all"
+while ! executeChRoot "emerge --usepkg --quiet-build y --backtrack 500 -uDN world xorg-x11 kdebase-meta kdm lxde-meta xdm metalog vixie-cron dhcpcd prelink boot-update @m335-all"
 do
 	autoEtcUpdate
 	
-	executeChRoot "perl-cleaner --reallyall --usepkg=n"
+	executeChRoot "perl-cleaner --reallyall"
 	
 	executeChRoot "emerge --sync"
 	
@@ -110,23 +110,16 @@ do
 done
 
 executeChRoot "emerge python:2.7 python:3.3"
-
-executeChRoot "mv /usr/portage/packages /usr/portage/packages.bak"
-
 executeChRoot "emerge @preserved-rebuild"
+
 executeChRoot "revdep-rebuild"
-
-
-executeChRoot "mv /usr/portage/packages /usr/portage/packages.rebuilt"
-executeChRoot "mv /usr/portage/packages.bak /usr/portage/packages"
-
 
 executeChRoot "emerge -uDN world"
 
 executeChRoot "emerge --depclean"
 
 #####-Kernel-#####
-executeChRoot "emerge lzop gentoo-sources"
+executeChRoot "emerge --usepkg lzop gentoo-sources"
 
 #executeChRoot "cd /usr/src/linux ; wget http://kernel.ubuntu.com/~kernel-ppa/configs/quantal/amd64-config.flavour.generic -O .config" #x64
 executeChRoot "cd /usr/src/linux ; wget http://kernel.ubuntu.com/~kernel-ppa/configs/quantal/i386-config.flavour.generic -O .config" #x32
@@ -134,14 +127,18 @@ executeChRoot "cd /usr/src/linux ; wget http://kernel.ubuntu.com/~kernel-ppa/con
 #executeChRoot "cd /usr/src/linux ; make clean ; make olddefconfig ; make -j 6 ; make modules_install ; cp ./arch/x86_64/boot/bzImage /boot/ProductionKernel" #x64
 executeChRoot "cd /usr/src/linux ; make clean ; make olddefconfig ; make -j 6 ; make modules_install ; cp ./arch/x86/boot/bzImage /boot/ProductionKernel" #x86
 
-#####-Exceptional Softload INstallation-#####
-while ! executeChRoot "emerge chromium app-emulation/virtualbox[additions,alsa,pulseaudio,sdk] \>=app-emulation/IQEmu-9999"
-do
-	autoEtcUpdate
-	sleep 1
-done
+#####-Attempt Exceptional Softload Installation-#####
+executeChRoot "emerge  --usepkg chromium"
+autoEtcUpdate
+executeChRoot "if emerge  --usepkg chromium ; then sleep 1 ; else emerge  --usepkg google-chrome ; fi"
+
+executeChRoot "emerge app-emulation/virtualbox[additions,alsa,pulseaudio,sdk] \>=app-emulation/IQEmu-9999"
+autoEtcUpdate
+executeChRoot "emerge app-emulation/virtualbox[additions,alsa,pulseaudio,sdk] \>=app-emulation/IQEmu-9999"
 
 #####-Configuration-#####
+executeChRoot "echo FEATURES=\"${FEATURES} getbinpkg\" >> /etc/make.conf"
+
 executeChRoot "sed -i 's/DISPLAYMANAGER=\"xdm\"/DISPLAYMANAGER=\"kdm\"/'  /etc/conf.d/xdm "
 
 executeChRoot "echo rc_parallel=\"YES\" >> /etc/rc.conf"
