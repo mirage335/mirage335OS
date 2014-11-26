@@ -15,7 +15,7 @@ executeChRoot() {
 
 #Automatically merge proposed etc filesystem changes.
 autoEtcUpdate() {
-	executeChRoot "echo -e y\\ny\\ny\\ny\\ny\\ny\\ny\\ny\\ny | etc-update --automode -3"
+	executeChRoot "yes | etc-update --automode -3"
 }
 
 #####-Initial Filesystem-#####
@@ -110,6 +110,8 @@ do
 done
 
 executeChRoot "emerge python:2.7 python:3.3"
+executeChRoot "emerge python-updater"
+
 executeChRoot "emerge @preserved-rebuild"
 
 executeChRoot "revdep-rebuild"
@@ -130,7 +132,9 @@ executeChRoot "cd /usr/src/linux ; make clean ; make olddefconfig ; make -j 6 ; 
 #####-Attempt Exceptional Softload Installation-#####
 executeChRoot "emerge  --usepkg chromium"
 autoEtcUpdate
-executeChRoot "if emerge  --usepkg chromium ; then sleep 1 ; else emerge  --usepkg google-chrome ; fi"
+executeChRoot "emerge  --usepkg chromium"
+autoEtcUpdate
+executeChRoot "if emerge  --usepkg chromium ; then sleep 1 ; else emerge  --usepkg google-chrome ; autoEtcUpdate ; emerge --usepkg google-chrome ; fi"
 
 executeChRoot "emerge app-emulation/virtualbox[additions,alsa,pulseaudio,sdk] \>=app-emulation/IQEmu-9999"
 autoEtcUpdate
