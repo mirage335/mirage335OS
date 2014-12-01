@@ -95,10 +95,12 @@ executeChRoot "layman -a BaseEbuilds-mirage335"
 executeChRoot "cd ; git clone https://github.com/mirage335/mirage335-sets.git"
 executeChRoot "cd ~/mirage335-sets ; ./install.sh"
 
+executeChRoot "emerge --usepkg --quiet-build y prelink"
+
 #####-Custom Softload Installation-#####
 
 #WARNING. This could become an infinite loop.
-while ! executeChRoot "emerge --usepkg --quiet-build y --backtrack 500 -uDN world xorg-x11 kdebase-meta kdm lxde-meta xdm metalog vixie-cron dhcpcd prelink boot-update @m335-all"
+while ! executeChRoot "emerge --usepkg --quiet-build y --backtrack 500 -uDN world xorg-x11 kdebase-meta kdm lxde-meta xdm metalog vixie-cron dhcpcd boot-update @m335-all"
 do
 	autoEtcUpdate
 	
@@ -120,6 +122,8 @@ executeChRoot "emerge -uDN world"
 
 executeChRoot "emerge --depclean"
 
+executeChRoot "env-update"
+
 #####-Kernel-#####
 executeChRoot "emerge --usepkg lzop gentoo-sources"
 
@@ -136,9 +140,9 @@ executeChRoot "emerge  --usepkg chromium"
 autoEtcUpdate
 executeChRoot "if emerge  --usepkg chromium ; then sleep 1 ; else emerge  --usepkg google-chrome ; autoEtcUpdate ; emerge --usepkg google-chrome ; fi"
 
-executeChRoot "emerge app-emulation/virtualbox[additions,alsa,pulseaudio,sdk] \>=app-emulation/IQEmu-9999"
+executeChRoot "env MAKEOPTS=\"\" emerge app-emulation/virtualbox[additions,alsa,pulseaudio,sdk] \>=app-emulation/IQEmu-9999"
 autoEtcUpdate
-executeChRoot "emerge app-emulation/virtualbox[additions,alsa,pulseaudio,sdk] \>=app-emulation/IQEmu-9999"
+executeChRoot "env MAKEOPTS=\"\" emerge app-emulation/virtualbox[additions,alsa,pulseaudio,sdk] \>=app-emulation/IQEmu-9999"
 
 #####-Configuration-#####
 executeChRoot "echo FEATURES=\"${FEATURES} getbinpkg\" >> /etc/make.conf"
@@ -203,5 +207,7 @@ exit
 #Add PDF printer at localhost:631 . Symlink /var/spool/cups-pdf/${USER} to ~/Downloads/PDF .
 
 #Configure KDE .
+
+#Install any remaining exceptional software.
 
 #rsyncBackup.sh
