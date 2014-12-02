@@ -116,7 +116,7 @@ executeChRoot "emerge python-updater"
 
 executeChRoot "emerge @preserved-rebuild"
 
-executeChRoot "revdep-rebuild"
+executeChRoot "source /etc/profile ; env-update ; revdep-rebuild"
 
 executeChRoot "emerge -uDN world"
 
@@ -138,7 +138,17 @@ executeChRoot "emerge  --usepkg chromium"
 autoEtcUpdate
 executeChRoot "emerge  --usepkg chromium"
 autoEtcUpdate
-executeChRoot "if emerge  --usepkg chromium ; then sleep 1 ; else emerge  --usepkg google-chrome ; autoEtcUpdate ; emerge --usepkg google-chrome ; fi"
+
+if executeChRoot "emerge  --usepkg chromium"
+then
+	sleep 1
+else
+	executeChRoot "emerge  --usepkg google-chrome"
+	autoEtcUpdate
+	executeChRoot "emerge  --usepkg google-chrome"
+fi
+
+autoEtcUpdate
 
 executeChRoot "env MAKEOPTS=\"\" emerge app-emulation/virtualbox[additions,alsa,pulseaudio,sdk] \>=app-emulation/IQEmu-9999"
 autoEtcUpdate
