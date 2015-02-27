@@ -20,6 +20,8 @@ autoEtcUpdate() {
 
 #####
 
+./mountChRoot.sh
+
 executeChRoot "emerge --sync"
 executeChRoot "emerge -vuDN --newuse --with-bdeps y --keep-going world"
 autoEtcUpdate
@@ -30,3 +32,5 @@ executeChRoot "revdep-rebuild"
 executeChRoot "emerge @preserved-rebuild"
 executeChRoot "emerge -vuDN --newuse --with-bdeps y --keep-going world"
 executeChRoot "emerge @preserved-rebuild"
+
+./umountChRoot.sh
