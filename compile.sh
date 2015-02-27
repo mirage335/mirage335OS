@@ -112,7 +112,6 @@ do
 done
 
 executeChRoot "emerge python:2.7 python:3.3"
-executeChRoot "emerge python-updater"
 
 executeChRoot "emerge @preserved-rebuild"
 
